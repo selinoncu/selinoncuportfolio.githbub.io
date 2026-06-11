@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Selin Öncü | Portfolio</title>
+    <style>
+        :root {
+            --bg-color: #f4edd2; /* Sıcak organik kum tonu */
+            --text-main: #1a1a1a; 
+            --brand-red: #d94126; /* Canlı pop-art kırmızı/turuncu */
+            --brand-yellow: #f4a261;
+            --card-bg: #ffffff;
+        }
+
+        * {
+            margin: 0; padding: 0; box-sizing: border-box;
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            padding: 20px;
+        }
+
+        /* Ana Düzen */
+        .site-wrapper {
+            max-width: 1300px; margin: 0 auto;
+            display: grid; grid-template-columns: 350px 1fr; gap: 50px;
+            position: relative;
+        }
+
+        /* Sabit Sol Menü (Masaüstü) */
+        .sidebar {
+            position: sticky; top: 40px; height: calc(100vh - 80px);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 20px 0;
+            z-index: 100;
+        }
+
+        .logo-area h1 {
+            font-size: 3.5rem; color: var(--brand-red); line-height: 0.9;
+            text-transform: uppercase; font-weight: 900; margin-bottom: 25px;
+            margin-top: 10px;
+        }
+        
+        .nav-links a {
+            display: block; text-decoration: none; color: var(--text-main);
+            font-size: 1.1rem; font-weight: 700; margin-bottom: 12px;
+            text-transform: uppercase; transition: transform 0.2s, color 0.2s;
+        }
+
+        .nav-links a:hover { color: var(--brand-red); transform: translateX(5px); }
+
+        .lang-switch {
+            background: var(--brand-red); color: white; border: none;
+            padding: 8px 15px; font-weight: 800; border-radius: 20px;
+            cursor: pointer; width: fit-content; box-shadow: 3px 3px 0px #000; transition: all 0.2s;
+        }
+
+        .lang-switch:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000; }
+
+        /* Mobil Hamburger Butonu ve Üst Bar */
+        .mobile-header {
+            display: none;
+            position: fixed; top: 0; left: 0; width: 100%;
+            background: var(--bg-color); border-bottom: 3px solid #000;
+            padding: 15px 20px; justify-content: space-between; align-items: center;
+            z-index: 1000;
+        }
+
+        .mobile-logo {
+            font-size: 1.8rem; color: var(--brand-red); font-weight: 900; text-transform: uppercase;
+        }
+
+        .hamburger-btn {
+            background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--text-main);
+        }
+
+        /* Sağ Taraf İçerik Alanları */
+        .content-area { padding: 20px 0; }
+
+        .section-block {
+            background: var(--card-bg); border: 3px solid #000; border-radius: 30px;
+            padding: 40px; margin-bottom: 40px; box-shadow: 8px 8px 0px #000;
+        }
+
+        .section-title {
+            font-size: 2rem; text-transform: uppercase; color: var(--brand-red);
+            margin-bottom: 25px; border-bottom: 3px dashed var(--brand-yellow);
+            padding-bottom: 10px; display: inline-block;
+        }
+
+        /* Sekme ve Multimedya Alanları */
+        .media-tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        
+        .tab-btn {
+            background: #eee; border: 2px solid #000; padding: 6px 12px;
+            font-weight: 700; border-radius: 12px; cursor: pointer; font-size: 0.9rem;
+        }
+
+        .tab-btn.active { background: var(--brand-yellow); }
+        .tab-content { display: none; margin-top: 15px; }
+        .tab-content.active { display: block; }
+
+        /* Yerel ve YouTube Video Önizleme Kartları */
+        .video-preview-card {
+            width: 100%; height: 250px; background: #222; border: 2px solid #000;
+            border-radius: 15px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; position: relative; overflow: hidden; margin-bottom: 15px;
+            background-size: cover; background-position: center;
+        }
+
+        .video-preview-card::after {
+            content: '▶ PLAY VIDEO';
+            position: absolute; background: var(--brand-red); color: white;
+            padding: 8px 16px; font-weight: bold; border-radius: 20px;
+            border: 2px solid #000; box-shadow: 2px 2px 0px #000;
+        }
+
+        /* Video Podcast Bölümleri Listesi */
+        .podcast-playlist {
+            display: flex; flex-direction: column; gap: 15px; margin-bottom: 15px;
+        }
+
+        .podcast-track {
+            background: #f8f9fa; border: 2px solid #000; border-radius: 15px;
+            padding: 15px; display: flex; justify-content: space-between; align-items: center;
+            gap: 15px;
+        }
+
+        .podcast-track h4 { font-size: 1rem; color: var(--brand-red); text-transform: uppercase; font-weight: bold; }
+
+        .podcast-play-btn {
+            background: var(--brand-red); color: white; border: 2px solid #000;
+            padding: 6px 14px; font-weight: bold; border-radius: 10px; cursor: pointer;
+            box-shadow: 2px 2px 0px #000; font-size: 0.85rem; transition: transform 0.1s;
+        }
+        .podcast-play-btn:hover { transform: translate(-1px, -1px); box-shadow: 3px 3px 0px #000; }
+
+        /* İnteraktif Instagram Profil Kartı */
+        .instagram-preview-container {
+            background: #fdfdfd; border: 2px solid #000; border-radius: 20px; padding: 25px;
+            box-shadow: 4px 4px 0px #000; margin-top: 15px;
+        }
+
+        .insta-profile-header {
+            display: flex; align-items: center; gap: 15px; margin-bottom: 15px;
+        }
+
+        .insta-avatar {
+            width: 60px; height: 60px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+            border-radius: 50%; padding: 3px;
+        }
+
+        .insta-avatar-inner {
+            width: 100%; height: 100%; background: #fff; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; font-size: 1.5rem;
+        }
+
+        .insta-meta h4 { font-weight: 800; font-size: 1.1rem; }
+        .insta-meta p { font-size: 0.85rem; color: #666; }
+
+        /* Sosyal Medya Genel Akış (9:16 - Yerel Videolar) */
+        .general-media-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-top: 20px;
+        }
+
+        .vertical-media-box {
+            border: 2px solid #000; border-radius: 20px; overflow: hidden; background: #222;
+            aspect-ratio: 9/16; position: relative; box-shadow: 4px 4px 0px #000;
+            display: flex; align-items: center; justify-content: center; cursor: pointer;
+        }
+
+        .vertical-media-box::after {
+            content: '▶ PLAY REELS';
+            position: absolute; background: #000; color: #fff; border: 1px solid #fff;
+            padding: 5px 10px; font-size: 0.8rem; font-weight: bold; border-radius: 10px;
+        }
+
+        /* Özgeçmiş Listeleri */
+        .item-row { margin-bottom: 25px; padding-bottom: 20px; border-bottom: 1px solid #eee; }
+        .item-header { display: flex; justify-content: space-between; font-weight: 700; color: var(--brand-red); margin-bottom: 5px; }
+        .badge {
+            background: #e9ecef; border: 1px solid #000; padding: 2px 8px;
+            font-size: 0.8rem; border-radius: 20px; display: inline-block; margin-top: 5px; margin-bottom: 8px;
+        }
+        .item-desc { font-size: 0.95rem; color: #444; margin-top: 5px; line-height: 1.5; }
+        .item-desc ul { margin-left: 20px; margin-top: 5px; }
+
+        /* Web Sitesi Butonu */
+        .visit-site-btn {
+            display: inline-block; background: var(--brand-red); color: white; text-decoration: none;
+            padding: 10px 20px; font-weight: bold; border-radius: 15px; border: 2px solid #000;
+            box-shadow: 3px 3px 0px #000; margin-top: 15px; transition: transform 0.2s;
+        }
+        .visit-site-btn:hover { transform: translate(-2px, -2px); box-shadow: 5px 5px 0px #000; }
+
+        /* 🔒 AÇILIR PENCERE OYNATICI STİLLERİ */
+        .lightbox-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.9); z-index: 2000;
+            display: none; justify-content: center; align-items: center;
+            padding: 20px;
+        }
+
+        .lightbox-window {
+            background: #fff; border: 3px solid #000; border-radius: 25px;
+            max-width: 900px; width: 100%; padding: 20px; position: relative;
+            box-shadow: 10px 10px 0px #000;
+        }
+
+        .lightbox-window.vertical-mode { max-width: 400px; } /* Reels modu için dar pencere */
+
+        .lightbox-close {
+            position: absolute; top: -50px; right: 0; background: var(--brand-red);
+            color: #fff; border: 2px solid #000; font-size: 1.5rem; font-weight: bold;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            box-shadow: 2px 2px 0px #000;
+        }
+
+        .lightbox-video-player {
+            width: 100%; border-radius: 15px; border: 2px solid #000; background: #000; display: none;
+        }
+
+        .lightbox-iframe-player {
+            width: 100%; height: 450px; border-radius: 15px; border: 2px solid #000; background: #000; display: none;
+        }
+
+        /* Başlangıç Dil Ayarı - Senkronize Filtreleme */
+        .tr-content { display: block; }
+        .en-content { display: none !important; }
+
+        /* Mobil ve Tablet */
+        @media (max-width: 900px) {
+            body { padding-top: 90px; }
+            .site-wrapper { grid-template-columns: 1fr; gap: 20px; }
+            .sidebar {
+                position: fixed !important; top: 0; left: -100%; width: 280px; height: 100vh;
+                background: var(--bg-color); border-right: 3px solid #000; padding: 30px 20px;
+                transition: left 0.3s ease; box-shadow: 5px 0 15px rgba(0,0,0,0.1);
+            }
+            .sidebar.active { left: 0; }
+            .mobile-header { display: flex; }
+            .logo-area h1 { font-size: 2.5rem; }
+            .section-block { padding: 25px; }
+            .section-title { font-size: 1.6rem; }
+        }
+    </style>
+</head>
+<body oncontextmenu="return false;"> <div class="mobile-header">
+        <div class="mobile-logo">Selin Öncü</div>
+        <button class="hamburger-btn" onclick="toggleMenu()">☰</button>
+    </div>
+
+    <div class="site-wrapper">
+        
+        <div class="sidebar" id="sidebarMenu">
+            <div class="logo-area">
+                <h1>Selin<br>Öncü</h1>
+                
+                <nav class="nav-links">
+                    <a href="#about" class="tr-content" onclick="toggleMenu()">1. Hakkımda</a>
+                    <a href="#education" class="tr-content" onclick="toggleMenu()">2. Eğitim</a>
+                    <a href="#experience" class="tr-content" onclick="toggleMenu()">3. Deneyim</a>
+                    <a href="#academic-projects" class="tr-content" onclick="toggleMenu()">4. Akademik Projeler</a>
+                    <a href="#ai-creative" class="tr-content" onclick="toggleMenu()">5. Yapay Zeka</a>
+                    <a href="#social-production" class="tr-content" onclick="toggleMenu()">6. Medya Üretimleri</a>
+                    <a href="#contact-cv" class="tr-content" onclick="toggleMenu()">7. İletişim & CV</a>
+
+                    <a href="#about" class="en-content" onclick="toggleMenu()">1. ABOUT ME</a>
+                    <a href="#education" class="en-content" onclick="toggleMenu()">2. EDUCATION</a>
+                    <a href="#experience" class="en-content" onclick="toggleMenu()">3. EXPERIENCE</a>
+                    <a href="#academic-projects" class="en-content" onclick="toggleMenu()">4. ACADEMIC PROJECTS</a>
+                    <a href="#ai-creative" class="en-content" onclick="toggleMenu()">5. ARTIFICIAL INTELLIGENCE</a>
+                    <a href="#social-production" class="en-content" onclick="toggleMenu()">6. SOCIAL PRODUCTION</a>
+                    <a href="#contact-cv" class="en-content" onclick="toggleMenu()">7. CONTACT & CV</a>
+                </nav>
+            </div>
+            
+            <button class="lang-switch" onclick="toggleLanguage()">EN</button>
+        </div>
+
+        <div class="content-area">
+
+            <div class="section-block" id="about">
+                <h2 class="section-title tr-content">Hakkımda</h2>
+                <h2 class="section-title en-content">ABOUT ME</h2>
+                <p class="tr-content" style="font-size: 1.1rem; line-height: 1.7;">Merhaba! Ben Selin, Yeni Medya ve İletişim bölümünden mezun oldum. Video prodüksiyonu, içerik üretimi, fotoğrafçılık ve dijital hikaye anlatıcılığı üzerine odaklanıyorum. Teknik bilgi ile estetik bakış açısını birleştirerek marka değerini güçlendiren içerikler üretebiliyor, yeni teknolojileri ve yaratıcı medya formatlarını kullanarak toplumsal ve kentsel hikayeleri güçlü bir görsel dille aktarmayı seviyorum.</p>
+                <p class="en-content" style="font-size: 1.1rem; line-height: 1.7;">Hi! I'm Selin, I graduated from New Media and Communication department. I specialize in video production, content creation, photography, and digital storytelling. By blending technical knowledge with an aesthetic perspective, I create content that strengthens brand value. I love communicating social and urban narratives with a powerful visual language using new technologies and creative media formats.</p>
+            </div>
+
+            <div class="section-block" id="education">
+                <h2 class="section-title tr-content">Eğitim</h2>
+                <h2 class="section-title en-content">EDUCATION</h2>
+                
+                <div class="item-row tr-content">
+                    <div class="item-header">
+                        <span>🎓 Yaşar Üniversitesi - İletişim Tezli Yüksek Lisans Programı</span>
+                        <span>2026 - Devam Ediyor</span>
+                    </div>
+                    <span class="badge">Tam Burslu / Bütünleşik Yüksek Lisans Programı (İngilizce)</span>
+                </div>
+                <div class="item-row en-content">
+                    <div class="item-header">
+                        <span>🎓 Yasar University - M.A. in Communication (with Thesis)</span>
+                        <span>2026 - Present</span>
+                    </div>
+                    <span class="badge">Full Scholarship / Integrated Master's Program (English)</span>
+                </div>
+
+                <div class="item-row tr-content">
+                    <div class="item-header">
+                        <span>🎓 Yaşar Üniversitesi - Yeni Medya ve İletişim Lisans Programı</span>
+                        <span>2022 - 2026</span>
+                    </div>
+                    <span class="badge">Tam Burslu (%100) / Not Ortalaması: 3.62</span>
+                </div>
+                <div class="item-row en-content">
+                    <div class="item-header">
+                        <span>🎓 Yasar University - New Media and Communication (B.A.)</span>
+                        <span>2022 - 2026</span>
+                    </div>
+                    <span class="badge">Full Scholarship (100%) / GPA: 3.62</span>
+                </div>
+            </div>
+
+            <div class="section-block" id="experience">
+                <h2 class="section-title tr-content">Deneyim</h2>
+                <h2 class="section-title en-content">EXPERIENCE</h2>
+
+                <div class="item-row tr-content">
+                    <div class="item-header">
+                        <span>💼 Bermuda Medya Ajansı - Prodüksiyon Stajyeri</span>
+                        <span>Ağustos 2025 - Aralık 2025</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Marka bilinirliğine ve etkileşim oranlarına doğrudan katkı sağlayan ilgi çekici video içeriklerinin üretimi.</li>
+                            <li>Etkili pazarlama kampanyaları için stratejik fotoğraf/video çekim süreçlerini uygulama.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="item-row en-content">
+                    <div class="item-header">
+                        <span>💼 Bermuda Media Agency - Production Intern</span>
+                        <span>August 2025 - December 2025</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Production of engaging video content that directly contributes to brand awareness and engagement rates.</li>
+                            <li>Planning and implementing strategic photo/video shoot processes for effective marketing campaigns.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="item-row tr-content">
+                    <div class="item-header">
+                        <span>💼 İzmir Valiliği İl Basın ve Halkla İlişkiler Müdürlüğü - Stajyer</span>
+                        <span>Temmuz 2025 - Ağustos 2025</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Medya takip ve arşivleme süreçleri kapsamında, gündemdeki haberlerin ve sosyal medya içeriklerinin takibine destek sağlama.</li>
+                            <li>Reklam mecraları ve medya planlama süreçlerine yönelik araştırma ve analizler yürütme.</li>
+                            <li>Arşivleme sistemlerinin düzenli, güncel ve erişilebilir tutulması için ilgili ekiplere destek verme.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="item-row en-content">
+                    <div class="item-header">
+                        <span>💼 Izmir Governorship Press and PR Directorate - Intern</span>
+                        <span>July 2025 - August 2025</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Supporting the tracking of current news and social media content within the scope of media monitoring and archiving processes.</li>
+                            <li>Conducting comprehensive research and analysis on media planning processes across advertising mediums.</li>
+                            <li>Supporting related teams to ensure archiving systems remain organized, up-to-date, and accessible.</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="item-row tr-content">
+                    <div class="item-header">
+                        <span>💼 Yaşar Üniversitesi Medya Merkezi - Stajyer</span>
+                        <span>Nisan 2024 - Haziran 2024</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Okul bünyesindeki podcast projelerinin kurgu süreçlerine destek sağlama.</li>
+                            <li>Okul ve festival etkinliklerinin video çekim süreçlerinde aktif rol alma.</li>
+                            <li>Film ekipmanları tedarik odasında, malzeme çıkış ve teslimat süreçlerinin koordinasyonunu sağlama.</li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="item-row en-content">
+                    <div class="item-header">
+                        <span>💼 Yasar University Media Center - Intern</span>
+                        <span>April 2024 - June 2024</span>
+                    </div>
+                    <div class="item-desc">
+                        <ul>
+                            <li>Supporting the editing processes of the university's podcast projects.</li>
+                            <li>Taking an active role in video shooting processes for university events and festivals.</li>
+                            <li>Coordinating equipment check-out and return processes in the film equipment supply room.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section-block" id="academic-projects">
+                <h2 class="section-title tr-content">Akademik Projeler</h2>
+                <h2 class="section-title en-content">ACADEMIC PROJECTS</h2>
+                
+                <div style="margin-bottom: 35px; border-bottom: 2px dashed #eee; padding-bottom: 25px;">
+                    <h3 class="tr-content">🎬 İki Dünyayı Taşımak: Görünmeyen Emek</h3>
+                    <h3 class="en-content">🎬 Carrying Two Worlds: Invisible Labor</h3>
+                    
+                    <p class="tr-content" style="margin: 10px 0; font-size:0.95rem;">İzmir Kent Konseyi kolaylaştırıcılığı ve ortaklığıyla yürüttüğüm çoklu mecra bitirme projesi. Proje; görünmeyen emeği hem belgesel hem de postlar, dikey reels/story serileri, podcast serisi ve özel bir web sitesi içeren kapsamlı bir dijital kampanya olarak ele alır.</p>
+                    <p class="en-content" style="margin: 10px 0; font-size:0.95rem;">A multimedia capstone project conducted in partnership with the Izmir City Council. The project addresses invisible labor through both documentary and an extensive digital campaign featuring posts, vertical reels/stories, a podcast series, and a custom website.</p>
+                    
+                    <div class="media-tabs">
+                        <button class="tab-btn active" onclick="switchTab(event, 'tw-doc')"><span class="tr-content">Belgesel Videosu</span><span class="en-content">Documentary Video</span></button>
+                        <button class="tab-btn" onclick="switchTab(event, 'tw-pod')"><span class="tr-content">Podcast</span><span class="en-content">Podcast</span></button>
+                        <button class="tab-btn" onclick="switchTab(event, 'tw-social')"><span class="tr-content">Sosyal Medya Kampanyası (9:16)</span><span class="en-content">Social Media Campaign (9:16)</span></button>
+                    </div>
+                    
+                    <div id="tw-doc" class="tab-content active">
+                        <div class="video-preview-card" style="background-image: url('https://img.youtube.com/vi/RG7mo8uvMrw/0.jpg');" onclick="playOnlineVideo('https://www.youtube.com/embed/RG7mo8uvMrw')"></div>
+                        <a href="https://selinoncu.github.io/" target="_blank" class="visit-site-btn tr-content">🌐 Proje Web Sitesini Ziyaret Et</a>
+                        <a href="https://selinoncu.github.io/" target="_blank" class="visit-site-btn en-content">🌐 Visit Project Website</a>
+                    </div>
+                    
+                    <div id="tw-pod" class="tab-content">
+                        <div class="podcast-playlist">
+                            <div class="podcast-track">
+                                <div>
+                                    <h4 class="tr-content">🎙️ Podcast Bölüm 1: İlk Tanı ve Kabullenme</h4>
+                                    <h4 class="en-content">🎙️ Podcast Epısode 1: Inıtıal Dıagnosıs and Acceptance</h4>
+                                </div>
+                                <button class="podcast-play-btn" onclick="playOnlineVideo('https://www.youtube.com/embed/T5kQ-htVLb8')"><span class="tr-content">▶ İZLE</span><span class="en-content">▶ WATCH</span></button>
+                            </div>
+                            <div class="podcast-track">
+                                <div>
+                                    <h4 class="tr-content">🎙️ Podcast Bölüm 2: Sosyal Çevre ve İlişkiler</h4>
+                                    <h4 class="en-content">🎙️ Podcast Epısode 2: Socıal Envıronment and Relatıonshıps</h4>
+                                </div>
+                                <button class="podcast-play-btn" onclick="playOnlineVideo('https://www.youtube.com/embed/FFfY6ur6meU')"><span class="tr-content">▶ İZLE</span><span class="en-content">▶ WATCH</span></button>
+                            </div>
+                            <div class="podcast-track">
+                                <div>
+                                    <h4 class="tr-content">🎙️ Podcast Bölüm 3: Gelecek Kaygısı ve Kimlik</h4>
+                                    <h4 class="en-content">🎙️ Podcast Epısode 3: Concerns About the Future and Identıty</h4>
+                                </div>
+                                <button class="podcast-play-btn" onclick="playOnlineVideo('https://www.youtube.com/embed/-8pcxi14Mcs')"><span class="tr-content">▶ İZLE</span><span class="en-content">▶ WATCH</span></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div id="tw-social" class="tab-content">
+                        <div class="instagram-preview-container">
+                            <div class="insta-profile-header">
+                                <div class="insta-avatar"><div class="insta-avatar-inner">📸</div></div>
+                                <div class="insta-meta">
+                                    <h4>@ikidunyayitasimak</h4>
+                                    <p class="tr-content">İki Dünyayı Taşımak Projesi Resmi Instagram Kampanya Hesabı</p>
+                                    <p class="en-content">Official Instagram Campaign Account for Carrying Two Worlds</p>
+                                </div>
+                            </div>
+                            <a href="https://www.instagram.com/ikidunyayitasimak" target="_blank" class="visit-site-btn tr-content">📸 Profili Instagram'da Gör</a>
+                            <a href="https://www.instagram.com/ikidunyayitasimak" target="_blank" class="visit-site-btn en-content">📸 View Profile on Instagram</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-bottom: 35px; border-bottom: 2px dashed #eee; padding-bottom: 25px;">
+                    <h3 class="tr-content">🏛️ Tarihi Çakaloğlu Hanı Projesi</h3>
+                    <h3 class="en-content">🏛️ Historical Cakaloglu Khan Project</h3>
+                    <p class="tr-content" style="margin: 10px 0; font-size:0.95rem;">Kentin saklı kalmış tarihi dokularını ve mekansal hikayelerini video kurgu ve dijital hikaye anlatıcılığı ile ortaya çıkaran belgesel video çalışmam.</p>
+                    <p class="en-content" style="margin: 10px 0; font-size:0.95rem;">A documentary video and post-production piece uncovering the hidden historical structures and spatial narratives of the city using digital storytelling.</p>
+                    <div class="video-preview-card" style="background-image: url('https://img.youtube.com/vi/RwsovbfNzuo/0.jpg');" onclick="playOnlineVideo('https://www.youtube.com/embed/RwsovbfNzuo')"></div>
+                </div>
+
+                <div>
+                    <h3 class="tr-content">🚢 İzmir Vapur Hikayeleri</h3>
+                    <h3 class="en-content">🚢 Izmir Ferry Stories</h3>
+                    <p class="tr-content" style="margin: 10px 0; font-size:0.95rem;">İZDENİZ iş birliğiyle yürütülen; senaryodan çekim aşamasına, ses tasarımlarından kurguya kadar tüm süreçlerini üstlendiğim kentsel hafıza video projesi.</p>
+                    <p class="en-content" style="margin: 10px 0; font-size:0.95rem;">An urban memory video project in collaboration with İZDENİZ, where I contributed from scriptwriting to shooting, managed sound design, edited the final production.</p>
+                    <div class="video-preview-card" style="background-image: url('vapur_kapak.png');" onclick="playOnlineVideo('https://www.youtube.com/embed/iA8Pc0nqTOg')"></div>
+                </div>
+            </div>
+
+            <div class="section-block" id="ai-creative">
+                <h2 class="section-title tr-content">Yapay Zeka</h2>
+                <h2 class="section-title en-content">AI</h2>
+                <div>
+                    <h3 class="tr-content">📖 Stephen King - "22.11.63" Sinematik Adaptasyon Projesi</h3>
+                    <h3 class="en-content">📖 Stephen King - "11.22.63" Cinematic Adaptation Project</h3>
+                    <p class="tr-content" style="margin: 10px 0; font-size:0.95rem;">Edebiyat metinlerinin yeni medya araçlarıyla görselleştirilmesi çalışması. Stephen King'in zamansal kırılmaları işleyen ünlü romanındaki bir kesiti, yapay zeka araçlarını kullanarak sinematik bir video parçasına dönüştürdüm.</p>
+                    <p class="en-content" style="margin: 10px 0; font-size:0.95rem;">A creative study focused on visualizing literary texts using generative media tools. I adapted a pivotal scene from Stephen King's acclaimed novel into a sequence of high-fidelity cinematic visuals and AI-generated video fragments.</p>
+                    <div class="video-preview-card" style="background-image: url('yapay_zeka_kapak.png');" onclick="playOnlineVideo('https://www.youtube.com/embed/lPzPnTu5wOc')"></div>
+                </div>
+            </div>
+
+            <div class="section-block" id="social-production">
+                <h2 class="section-title tr-content">Medya Üretimleri</h2>
+                <h2 class="section-title en-content">SOCIAL PRODUCTION</h2>
+                <p class="tr-content" style="margin-bottom: 20px;">Prodüksiyon stajım kapsamında Slimworld, Slimtime, Slimshape, Dr. Atabay, Todi, 1881 Cafe & Lounge gibi markalar ve daha fazlası için kurguladığım dikey formatlı (9:16) Reels video örnekleri:</p>
+                <p class="en-content" style="margin-bottom: 20px;">Here are some of the vertical-format (9:16) Reels videos I created and edited during my production internship for brands such as Slimworld, Slimtime, Slimshape, Dr. Atabay, Todi, 1881 Cafe & Lounge, and more:</p>
+
+                <div class="general-media-grid">
+                    <div class="vertical-media-box" style="background-image: url('reels1_kapak.png');" onclick="playOnlineVideo('https://www.youtube.com/embed/FszH-o_lhN0', true)"></div>
+                    <div class="vertical-media-box" style="background-image: url('reels2_kapak.png');" onclick="playOnlineVideo('https://www.youtube.com/embed/03wAfuO8ysg', true)"></div>
+                    <div class="vertical-media-box" style="background-image: url('reels3_kapak.png');" onclick="playOnlineVideo('https://www.youtube.com/embed/rHW5WgPG7_g', true)"></div>
+                </div>
+            </div>
+
+            <div class="section-block" id="contact-cv">
+                <h2 class="section-title tr-content">İletişim & Özgeçmiş</h2>
+                <h2 class="section-title en-content">CONTACT & CV</h2>
+                <div style="text-align: center; padding: 20px 0;">
+                    <p style="font-size: 1.1rem; font-weight: bold; margin-bottom: 15px;">📬 Mail: <a href="mailto:selinoncu7@gmail.com" style="color:var(--brand-red); text-decoration:none;">selinoncu7@gmail.com</a></p>
+                    <p style="font-size: 1.1rem; font-weight: bold; margin-bottom: 30px;">🔗 LinkedIn: <a href="https://www.linkedin.com/in/selinoncu" target="_blank" style="color:var(--brand-red); text-decoration:none;">linkedin.com/in/selinoncu</a></p>
+                    
+                    <a id="dynamicCVBtn" href="SelinÖncüCVTR.pdf" download style="display:inline-block; background:#000; color:white; text-decoration:none; padding:12px 25px; font-weight:bold; border-radius:30px; box-shadow: 4px 4px 0 var(--brand-yellow); transition: transform 0.2s;">
+                        <span class="tr-content">📄 Özgeçmişimi İndir (PDF)</span>
+                        <span class="en-content">📄 Download My Resume (PDF)</span>
+                    </a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="lightbox-overlay" id="videoLightbox" onclick="closeVideo()">
+        <div class="lightbox-window" id="lightboxWindow" onclick="event.stopPropagation()">
+            <button class="lightbox-close" onclick="closeVideo()">×</button>
+            <video class="lightbox-video-player" id="mainVideoPlayer" controls controlsList="nodownload" disablePictureInPicture></video>
+            <iframe class="lightbox-iframe-player" id="mainIframePlayer" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+        </div>
+    </div>
+
+    <script>
+        let currentLang = 'tr';
+
+        // 🔒 Yerel Videoları Açan Fonksiyon
+        function playLocalVideo(videoSrc, isVertical) {
+            const lightbox = document.getElementById('videoLightbox');
+            const windowEl = document.getElementById('lightboxWindow');
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            const iframePlayer = document.getElementById('mainIframePlayer');
+
+            iframePlayer.style.display = 'none';
+            iframePlayer.src = "";
+            
+            if(isVertical) {
+                windowEl.classList.add('vertical-mode');
+            } else {
+                windowEl.classList.remove('vertical-mode');
+            }
+
+            videoPlayer.src = videoSrc;
+            videoPlayer.style.display = 'block';
+            lightbox.style.display = 'flex';
+            videoPlayer.play();
+        }
+
+        // 🔒 YouTube Videolarını Güvenli Açan Fonksiyon
+        function playOnlineVideo(embedUrl) {
+            const lightbox = document.getElementById('videoLightbox');
+            const windowEl = document.getElementById('lightboxWindow');
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            const iframePlayer = document.getElementById('mainIframePlayer');
+
+            videoPlayer.style.display = 'none';
+            videoPlayer.pause();
+            videoPlayer.src = "";
+            windowEl.classList.remove('vertical-mode');
+
+            iframePlayer.src = embedUrl + "?autoplay=1&rel=0&modestbranding=1";
+            iframePlayer.style.display = 'block';
+            lightbox.style.display = 'flex';
+        }
+
+        function closeVideo() {
+            const lightbox = document.getElementById('videoLightbox');
+            const videoPlayer = document.getElementById('mainVideoPlayer');
+            const iframePlayer = document.getElementById('mainIframePlayer');
+
+            videoPlayer.pause();
+            videoPlayer.src = "";
+            iframePlayer.src = "";
+            
+            lightbox.style.display = 'none';
+        }
+
+        function toggleMenu() {
+            if (window.innerWidth <= 900) {
+                const sidebar = document.getElementById('sidebarMenu');
+                sidebar.classList.toggle('active');
+            }
+        }
+
+        // 🔒 Dil Filtreleme ve Dinamik CV Atama Altyapısı
+        function toggleLanguage() {
+            const trElements = document.querySelectorAll('.tr-content');
+            const enElements = document.querySelectorAll('.en-content');
+            const btn = document.querySelector('.lang-switch');
+            const cvBtn = document.getElementById('dynamicCVBtn');
+            
+            if(currentLang === 'tr') {
+                // İngilizceye Geçiş
+                trElements.forEach(el => el.style.setProperty('display', 'none', 'important'));
+                enElements.forEach(el => el.style.setProperty('display', 'block', 'important'));
+                btn.innerText = 'TR';
+                cvBtn.setAttribute('href', 'SelinOncuCVEN.pdf');
+                currentLang = 'en';
+            } else {
+                // Türkçeye Geri Dönüş
+                trElements.forEach(el => el.style.setProperty('display', 'block', 'important'));
+                enElements.forEach(el => el.style.setProperty('display', 'none', 'important'));
+                btn.innerText = 'EN';
+                cvBtn.setAttribute('href', 'SelinÖncüCVTR.pdf');
+                currentLang = 'tr';
+            }
+        }
+
+        function switchTab(evt, tabId) {
+            const parentBlock = evt.currentTarget.closest('.section-block');
+            const tabContents = parentBlock.querySelectorAll('.tab-content');
+            tabContents.forEach(content => content.classList.remove('active'));
+
+            const tabButtons = parentBlock.querySelectorAll('.tab-btn');
+            tabButtons.forEach(btn => btn.classList.remove('active'));
+
+            document.getElementById(tabId).classList.add('active');
+            evt.currentTarget.classList.add('active');
+        }
+    </script>
+</body>
+</html>
